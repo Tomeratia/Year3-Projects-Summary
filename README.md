@@ -136,23 +136,104 @@ M3 is the only model that detects animals on road (green box). M2 misses them en
 
 ---
 
-## Generation Pipeline
+## Generation Pipeline Details
 
-| Step | Model | Purpose |
-|---|---|---|
-| Road Segmentation | SAM 3 (`facebook/sam3`) | Define inpainting region |
-| Depth Estimation | Depth Anything V2 Small | Perspective-aware sizing |
-| Animal Generation | SDXL + ControlNet Depth | Photorealistic insertion |
-| Quality Evaluation | ViT + Spectral (ensemble) | Validate realism |
+### Step 1 — Road Segmentation (SAM 3)
+- **Model:** `facebook/sam3`
+- **Method:** Text-prompted concept segmentation with query `"road"`
+- **Output:** Binary road mask — the inpainting region
+- **Strategy:** Largest mask in the lower half of the image (filters out sky/buildings)
+
+### Step 2 — Depth Estimation (Depth Anything V2)
+- **Model:** `depth-anything/Depth-Anything-V2-Small-hf`
+- **Output:** uint8 depth map, same resolution as input
+- **Use:** (1) ControlNet conditioning for SDXL, (2) perspective-aware animal sizing
+
+### Step 3 — Animal Generation (SDXL + ControlNet)
+- **Inpainting model:** `diffusers/stable-diffusion-xl-1.0-inpainting-0.1`
+- **ControlNet:** `diffusers/controlnet-depth-sdxl-1.0`
+- **VAE:** `madebyollin/sdxl-vae-fp16-fix` (prevents NaN in float16)
+- **Precision:** float16 on NVIDIA A100-SXM4-40GB
+- **Prompts:** 13 animal types (stag, moose, boar, fox, dog, raccoon, wolf, sheep, goat, ram, cow, roe deer, fallow deer)
+- **Mask:** Perspective-aware elliptical mask placed on road surface
+- **Context padding:** 18% around animal bounding box for natural blending
+
+### Step 4 — Synthetic Quality Evaluation
+
+To validate visual quality, two complementary AI-based detectors are used:
+
+- **Spectral (S-DiFL)** — analyzes the image in the **frequency domain**. Diffusion-generated images often leave subtle artifacts in high-frequency components detectable via Fourier analysis.
+- **ViT-based** (`umm-maybe/AI-image-detector`) — uses a Vision Transformer trained to classify images as real or AI-generated based on semantic and texture features.
+
+Using both together (ensemble) provides a more robust quality signal.
+
+| Detector | Method | AUC | Accuracy | F1 |
+|---|---|---|---|---|
+| Spectral (S-DiFL) | Frequency analysis | 0.491 | 0.514 | 0.397 |
+| ViT-based | `umm-maybe/AI-image-detector` | 0.658 | 0.623 | 0.648 |
+| Ensemble (Mean) | Average of above | 0.658 | 0.623 | 0.652 |
+
+> An AUC of ~0.66 indicates images are realistic enough to partially fool automated detectors — good quality for training purposes.
+
+---
+
+## Technology Stack
+
+| Component | Technology |
+|---|---|
+| Object Detection | YOLOv11s (Ultralytics 8.x) |
+| Image Generation | Stable Diffusion XL Inpainting |
+| Depth Guidance | ControlNet Depth SDXL |
+| Road Segmentation | SAM 3 (Meta) |
+| Depth Estimation | Depth Anything V2 Small |
+| Synthetic Detection | ViT (`umm-maybe/AI-image-detector`) |
+| Framework | PyTorch + HuggingFace Diffusers/Transformers |
+| Training Env | Google Colab (A100 / L4 GPU) |
+| Dataset | KITTI Object Detection (via Ultralytics) |
 
 ---
 
 ## Key Findings — Semester A
 
-- **Synthetic augmentation enables animal detection from zero** — this capability did not exist before.
+### What Worked
+- **Synthetic augmentation enables animal detection from zero.** M2 scores 0.000 AP50 on animals. M3 scores **0.995 AP50** — entirely from generated training data.
 - **Minimal regression on standard classes** (<2.5% average degradation).
-- **Depth-guided generation produces perspective-correct results.**
-- **SAM 3 road masking** correctly confines animal placement to drivable surfaces.
+- **Depth-guided generation produces perspective-correct results.** Animals scale appropriately with scene depth.
+- **SAM 3 road masking is effective** — correctly confines animal placement to drivable surfaces.
+
+### Limitations & Future Work
+
+| Limitation | Potential Solution |
+|---|---|
+| SDXL generation is slow (~22s/image on A100) | Distilled models (SDXL-Turbo, FLUX) |
+| Synthetic detector AUC ~0.66 (not perfect realism) | Higher-quality diffusion models, better prompts |
+| Only 1,000 sampled images (out of 7,481 KITTI) | Scale to full dataset |
+| Limited animal diversity (13 species, fixed poses) | ControlNet pose conditioning |
+| No temporal consistency (video sequences) | Video diffusion models |
+
+---
+
+## Notebooks
+
+| Notebook | Purpose |
+|---|---|
+| `00_EDA_and_Data_Prep.ipynb` | Dataset download, EDA, YOLO format verification |
+| `01_Generation_and_Evaluation.ipynb` | Full generation pipeline + synthetic quality evaluation |
+| `02_Training_and_Evaluation.ipynb` | YOLOv11s training (M2, M3) + 3×3 evaluation matrix |
+
+---
+
+## References — Semester A
+
+- Geiger, A. et al. (2013). **Vision meets robotics: The KITTI dataset.** *IJRR, 32*(11).
+- Podell, D. et al. (2023). **SDXL: Improving latent diffusion models.** *arXiv:2307.01952.* — `diffusers/stable-diffusion-xl-1.0-inpainting-0.1`
+- Zhang, L. et al. (2023). **ControlNet.** *ICCV 2023.* — `diffusers/controlnet-depth-sdxl-1.0`
+- Carion, N. et al. (2025). **SAM 3: Segment Anything with Concepts.** *arXiv:2511.16719.* — `facebook/sam3`
+- Yang, L. et al. (2024). **Depth Anything V2.** *arXiv:2406.09414.* — `depth-anything/Depth-Anything-V2-Small-hf`
+- Ultralytics. (2024). **YOLOv11.** — M1, M2, M3 training and evaluation
+- Dosovitskiy, A. et al. (2020). **ViT: An image is worth 16×16 words.** *arXiv:2010.11929.* — `umm-maybe/AI-image-detector`
+- Zhang, Y. et al. (2021). **Deep long-tailed learning: A survey.** *arXiv:2110.04596.*
+- Tremblay, J. et al. (2018). **Training deep networks with synthetic data.** *CVPR Workshops 2018.*
 
 ---
 
