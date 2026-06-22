@@ -352,8 +352,7 @@ $$z_{\text{new}} = \text{clamp}\!\left(z_{\text{old}} + \alpha \cdot (\mathbf{c}
 
 **Setup:** 2 arms × 3 samplers × 3 seeds = 18 synthetic sessions, run on the deterministic mock backend (no GPU).
 
-> **Why mock and not real Diffusion?** The comparison study tests the *algorithm* — specifically whether critique tags change the mathematical trajectory of the steering vector `z`. This is independent of the generated images: the same vector arithmetic runs whether the backend produces real Stable Diffusion images or SVG placeholders. Running 18 sessions × multiple rounds on a real GPU would require hundreds of image generations (costly and slow), while the mock backend produces identical steering behavior in seconds. The supervisor designed the mock backend precisely for this kind of algorithm-level evaluation.
-
+> **Why mock and not real Diffusion?** The comparison study tests the *algorithm* — specifically whether critique tags change the mathematical trajectory of the steering vector `z`. This is independent of the generated images: the same vector arithmetic runs whether the backend produces real Stable Diffusion images or SVG placeholders. Running 18 sessions × multiple rounds on a real GPU would require hundreds of image generations (costly and slow), while the mock backend produces identical steering behavior in seconds.
 ```
 Rounds to convergence               Final distance to target
 ────────────────────────────        ──────────────────────────────────
