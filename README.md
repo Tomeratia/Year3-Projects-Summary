@@ -1,4 +1,4 @@
-# Year 3 — AI Research Projects Summary
+# AI Research Projects Summary
 
 **Student:** Tomer Atia  
 **Academic Year:** 2025–2026  
