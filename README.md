@@ -238,6 +238,7 @@ Using both together (ensemble) provides a more robust quality signal.
 | Only 1,000 sampled images (out of 7,481 KITTI) | Scale to full dataset |
 | Limited animal diversity (13 species, fixed poses) | ControlNet pose conditioning |
 | No temporal consistency (video sequences) | Video diffusion models |
+| Potential domain overfit — all training images share the same SDXL pipeline and KITTI backgrounds, which may limit generalization to different synthetic distributions | Diversify generation pipeline (multiple models, varied backgrounds, different prompts) |
 
 ---
 
