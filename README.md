@@ -16,7 +16,7 @@ This report summarizes two independent research projects completed during the th
 | **Core challenge** | Rare objects missing from training data | No signal for *why* a user prefers an image |
 | **Generative AI role** | Synthesize missing training examples | Steer generation toward user preferences |
 | **Key result** | Animal detection: 0% → 99.5% AP50 | Critique tags improve steering accuracy by 38% |
-| **Repository** | [SyntheticImageData](https://github.com/HITProjects/SyntheticImageData) | [StableSteering](https://github.com/Tomeratia/StableSteering) |
+| **Repository** | [SyntheticImageData](https://github.com/HITProjects/SyntheticImageData/tree/main/ObjectsOrAnimals) | [StableSteering](https://github.com/Tomeratia/StableSteering) |
 
 ---
 
@@ -25,7 +25,7 @@ This report summarizes two independent research projects completed during the th
 # Semester A — Autonomous Car Edge Case Detection
 ### Synthetic Animal Insertion for Robustness Testing of Autonomous Driving Perception
 
-📁 **Full project repository:** [HITProjects/SyntheticImageData](https://github.com/HITProjects/SyntheticImageData/tree/main/ObjectsOrAnimals)
+📁 **Full project repository:** [HITProjects/SyntheticImageData/ObjectsOrAnimals](https://github.com/HITProjects/SyntheticImageData/tree/main/ObjectsOrAnimals)
 
 ---
 
