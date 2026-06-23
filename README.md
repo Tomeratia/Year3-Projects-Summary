@@ -20,10 +20,6 @@ This report summarizes two independent research projects completed during the th
 
 ---
 
----
-
----
-
 # Semester A — Autonomous Car Edge Case Detection
 ### Synthetic Animal Insertion for Robustness Testing of Autonomous Driving Perception
 
@@ -287,7 +283,7 @@ All five existing feedback modes capture **which** candidate the user prefers. N
 
 <p align="center"><img src="docs/assets/semester_b/diagram_algorithm_flowchart.png" width="600"/></p>
 
-**End-to-end flow for `critique_rating`** — how a single feedback submission travels from the browser to the convergence report:
+**End-to-end request flow for `critique_rating`** — how a single feedback submission travels from the browser to the convergence report:
 
 <p align="center"><img src="docs/assets/semester_b/diagram_critique_flow.png" width="800"/></p>
 
@@ -467,6 +463,16 @@ Four dropdown menus on the setup page — Feedback mode, Updater, Sampler, Steer
 
 This means the dropdowns are a convenience layer, not a replacement — power users can ignore them entirely and write YAML as before.
 
+```mermaid
+flowchart LR
+    D["Dropdown
+(feedback_mode)"] -->|"onChange"| Y["YAML editor
+feedback_mode: critique_rating"]
+    Y -->|"onInput"| D
+    style D fill:#e8f0fe,stroke:#4285f4
+    style Y fill:#f3f4f6,stroke:#6b7280
+```
+
 ---
 
 ## Feature 7 — Analysis Tools
@@ -493,8 +499,6 @@ Three tidy CSV tables with shared join keys — load directly into a notebook or
 2. Tag frequency heatmap
 3. Candidate diversity per round
 4. Cross-session updater comparison
-
----
 
 ---
 
