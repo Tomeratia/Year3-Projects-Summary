@@ -43,7 +43,7 @@ The answer is clear: **a model trained without synthetic data scores 0% on anima
 
 ## Pipeline Architecture
 
-![Pipeline Diagram](../Autonomous_Car/docs/images/pipeline_diagram.jpeg)
+![Pipeline Diagram](docs/assets/semester_a/pipeline_diagram.jpeg)
 
 ---
 
