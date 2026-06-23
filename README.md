@@ -181,7 +181,7 @@ M3 outperforms M2 across all test sets. The biggest gains are on **Test-Mixed (+
 
 StableSteering is a FastAPI research platform for **iterative preference-guided image generation**. The core loop: a user submits a text prompt → candidates are generated via Stable Diffusion → the user provides feedback → a steering vector `z` is updated → the next round of candidates is generated from the updated state.
 
-This semester's contributions address two gaps explicitly listed in the supervisor's research roadmap:
+This semester's contributions extend the platform with seven new capabilities:
 
 | Feature | What it adds |
 |---|---|
@@ -213,7 +213,7 @@ Manual YAML-only setup          Quick-config panel (dropdowns synced with YAML)
 
 ## System Architecture
 
-<p align="center"><img src="assets/diagram_system_architecture.png" width="800"/></p>
+<p align="center"><img src="docs/assets/semester_b/diagram_system_architecture.png" width="800"/></p>
 
 ---
 
@@ -221,7 +221,7 @@ Manual YAML-only setup          Quick-config panel (dropdowns synced with YAML)
 
 ### Motivation
 
-The platform had no mechanism to tell a user or researcher when a steering session had "settled." Every session ran for a fixed number of rounds with no signal that the steering vector `z` had stopped meaningfully moving. The supervisor's roadmap (§5, §8.4) listed convergence tracking as a prerequisite for studying session efficiency and comparing strategies.
+The platform had no mechanism to tell a user or researcher when a steering session had "settled." Every session ran for a fixed number of rounds with no signal that the steering vector `z` had stopped meaningfully moving. This feature adds that missing signal, making it possible to study session efficiency and compare strategies.
 
 ### How It Works
 
@@ -266,19 +266,15 @@ flowchart LR
 
 ### Motivation
 
-The supervisor's roadmap (§7.4) explicitly states:
-
-> *"test **critique-aware models** that combine discrete selections with structured or free-text reasons"*
-
 All five existing feedback modes capture **which** candidate the user prefers. None captures **why**. This feature adds that missing dimension.
 
 ### Design — Strictly Additive
 
-<p align="center"><img src="assets/diagram_additive_design.png" width="550"/></p>
+<p align="center"><img src="docs/assets/semester_b/diagram_additive_design.png" width="550"/></p>
 
 ### The Algorithm
 
-<p align="center"><img src="assets/diagram_algorithm_flowchart.png" width="800"/></p>
+<p align="center"><img src="docs/assets/semester_b/diagram_algorithm_flowchart.png" width="800"/></p>
 
 For each candidate $i$, compute a tag weight:
 
@@ -322,7 +318,7 @@ critique_weighted ████████ 6.11     critique_weighted ███�
 
 ### Motivation
 
-The roadmap (§9.5) asks for stronger updaters that are robust to noisy feedback and sensitive to repeated signals. The existing `critique_weighted_preference` treats every tag equally regardless of whether the user has selected it once or five times in a row. This wastes valuable consistency information.
+The existing `critique_weighted_preference` treats every tag equally regardless of whether the user has selected it once or five times in a row. This wastes valuable consistency information.
 
 ### How It Works
 
@@ -418,7 +414,7 @@ The UI highlights the incumbent with a "Current winner" badge and the challenger
 
 ### Motivation
 
-The supervisor's roadmap (§7.1) asks for an empirical comparison of all feedback modes. No such study existed — it was unknown whether richer feedback (ratings, tags) actually outperforms simpler modes (winner-only, pairwise) in steering accuracy.
+No empirical comparison of all feedback modes existed — it was unknown whether richer feedback (ratings, tags) actually outperforms simpler modes (winner-only, pairwise) in steering accuracy.
 
 ### Setup
 
