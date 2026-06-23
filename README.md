@@ -158,6 +158,8 @@ M3 is the only model that detects animals on road (green box). M2 misses them en
 # Semester B — StableSteering: Preference-Guided Image Generation
 ### Convergence Detection & Critique-Assisted Feedback Mode
 
+📁 **Full project repository:** [Tomeratia/StableSteering](https://github.com/Tomeratia/StableSteering/tree/feature/convergence-and-critique-feedback)
+
 ---
 
 ## Overview
