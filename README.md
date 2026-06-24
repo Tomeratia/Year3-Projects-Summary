@@ -27,6 +27,12 @@ This report summarizes two independent research projects completed during the th
 
 ---
 
+## Executive Summary
+
+Standard driving datasets contain almost no animal examples, leaving object detectors completely blind to this safety-critical hazard. This project builds a depth-guided generative augmentation pipeline that inserts photorealistic animals into real KITTI driving scenes using SDXL + ControlNet, then trains and evaluates YOLOv11s detectors on the augmented data. The result: **animal detection improves from 0% to 99.5% AP50** with less than 2.5% regression on existing classes.
+
+---
+
 ## Overview
 
 This project addresses a critical gap in autonomous driving safety: **detecting rare, unexpected objects on the road** — specifically animals. Standard driving datasets (like KITTI) contain almost no animal examples, leaving perception models blind to this real-world hazard.
@@ -159,6 +165,12 @@ M3 is the only model that detects animals on road (green box). M2 misses them en
 ### Convergence Detection & Critique-Assisted Feedback Mode
 
 📁 **Full project repository:** [Tomeratia/StableSteering](https://github.com/Tomeratia/StableSteering/tree/feature/convergence-and-critique-feedback)
+
+---
+
+## Executive Summary
+
+The StableSteering platform had no way to tell when a session had converged, and no feedback mechanism that captured *why* a user prefers an image. This semester adds convergence detection, two new feedback modes, two new updaters, an empirical 54-session comparison study, and supporting analysis tools — all strictly additive. Key result: **critique-assisted feedback reaches the target 38% more accurately** than plain scalar ratings, at the cost of more rounds.
 
 ---
 
