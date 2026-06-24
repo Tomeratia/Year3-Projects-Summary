@@ -33,20 +33,6 @@ Standard driving datasets contain almost no animal examples, leaving object dete
 
 ---
 
-## Overview
-
-This project addresses a critical gap in autonomous driving safety: **detecting rare, unexpected objects on the road** — specifically animals. Standard driving datasets (like KITTI) contain almost no animal examples, leaving perception models blind to this real-world hazard.
-
-The solution is a **full generative augmentation pipeline** that:
-1. Takes real KITTI driving images
-2. Uses AI to detect the road surface and estimate scene depth
-3. Generates photorealistic animals on the road via SDXL Inpainting + ControlNet
-4. Trains and benchmarks YOLOv11s detectors with and without the synthetic data
-
-> **The answer is clear: a model trained without synthetic data scores 0% on animal detection. A model trained with synthetic data scores 99.5% AP50 — on a class that never existed in the original dataset.**
-
----
-
 ## Pipeline Architecture
 
 <p align="center"><img src="docs/assets/semester_a/pipeline_diagram.jpeg" width="750"/></p>
@@ -174,9 +160,7 @@ The StableSteering platform had no way to tell when a session had converged, and
 
 ---
 
-## Overview
-
-StableSteering is a FastAPI research platform for **iterative preference-guided image generation**. The core loop: a user submits a text prompt → candidates are generated via Stable Diffusion → the user provides feedback → a steering vector `z` is updated → the next round of candidates is generated from the updated state.
+## Features
 
 This semester's contributions extend the platform with seven new capabilities:
 
