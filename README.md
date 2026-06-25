@@ -145,6 +145,18 @@ M3 is the only model that detects animals on road (green box). M2 misses them en
 
 ---
 
+## Limitations & Future Work
+
+| Limitation | Potential Solution |
+|---|---|
+| SDXL generation is slow (~22s/image on A100) | Distilled models (SDXL-Turbo, FLUX) |
+| Synthetic detector AUC ~0.66 (not perfect realism) | Higher-quality diffusion models, better prompts |
+| Only 1,000 sampled images (out of 7,481 KITTI) | Scale to full dataset |
+| Limited animal diversity (8 species, fixed poses) | ControlNet pose conditioning |
+| No temporal consistency (video sequences) | Video diffusion models |
+
+---
+
 ## Key Findings — Semester A
 
 - **Synthetic augmentation enables animal detection from zero** — this capability did not exist before.
