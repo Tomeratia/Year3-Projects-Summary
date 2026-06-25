@@ -85,11 +85,13 @@ Using depth maps as ControlNet conditioning ensures animals are **scaled correct
 
 ## Models
 
-| Model | Training Data | Purpose |
-|---|---|---|
-| **M1** | COCO pretrained, no fine-tune | Zero-shot baseline |
-| **M2** | KITTI real only | Domain-adapted, no animal data |
-| **M3** | KITTI real + synthetic animals | Full augmented model |
+| Model | Training Data | Classes | Parameters | Purpose |
+|---|---|---|---|---|
+| **M1** | COCO pretrained, no fine-tune | 80 (COCO) | 9.44M | Zero-shot baseline |
+| **M2** | KITTI real only | 9 (KITTI + Animal) | 9.44M | Domain-adapted, no animal data |
+| **M3** | KITTI real + synthetic animals | 9 (KITTI + Animal) | 9.44M | Full augmented model |
+
+All models use YOLOv11s architecture. Training hardware: NVIDIA L4 (22 GB VRAM), batch size 8.
 
 ---
 
@@ -112,6 +114,28 @@ Using depth maps as ControlNet conditioning ensures animals are **scaled correct
 | M1 (COCO base) | 0.6463 | 0.5348 | 0.4436 |
 | M2 (KITTI real) | 0.5613 | 0.4347 | 0.3710 |
 | **M3 (+ synthetic)** | **0.5802** | **0.5598** | **0.4934** |
+
+M3 outperforms M2 across all test sets: +28.8% on Test-Mixed, +32.9% on Test-Synthetic.
+
+### Overall Performance (mAP50-95)
+
+| Model | Test-Clean | Test-Mixed | Test-Synthetic |
+|---|:---:|:---:|:---:|
+| M1 (COCO base) | 0.3757 | 0.2971 | 0.2360 |
+| M2 (KITTI real) | 0.3789 | 0.2869 | 0.2385 |
+| **M3 (+ synthetic)** | **0.3959** | **0.4058** | **0.3599** |
+
+### Per-Class Regression on Standard Classes (M3 vs M2, Test-Clean)
+
+| Class | M2 AP50 | M3 AP50 | Δ |
+|---|:---:|:---:|:---:|
+| Car | 0.812 | 0.798 | -1.7% |
+| Pedestrian | 0.631 | 0.619 | -1.9% |
+| Van | 0.452 | 0.447 | -1.1% |
+| Cyclist | 0.398 | 0.401 | +0.8% |
+| Truck | 0.521 | 0.509 | -2.3% |
+
+Adding synthetic animal data causes **minimal regression (<2.5%)** on existing KITTI classes.
 
 <p align="center"><img src="docs/assets/semester_a/performance_degradation_chart.png" width="650"/></p>
 
@@ -138,10 +162,22 @@ M3 is the only model that detects animals on road (green box). M2 misses them en
 
 | Step | Model | Purpose |
 |---|---|---|
-| Road Segmentation | SAM 3 (`facebook/sam3`) | Define inpainting region |
-| Depth Estimation | Depth Anything V2 Small | Perspective-aware sizing |
-| Animal Generation | SDXL + ControlNet Depth | Photorealistic insertion |
-| Quality Evaluation | ViT + Spectral (ensemble) | Validate realism |
+| Road Segmentation | SAM 3 (`facebook/sam3`) | Text-prompted segmentation → inpainting mask |
+| Depth Estimation | Depth Anything V2 Small (`depth-anything/Depth-Anything-V2-Small-hf`) | Depth map for ControlNet conditioning + perspective sizing |
+| Animal Generation | SDXL Inpainting + ControlNet Depth | Photorealistic animal insertion |
+| Quality Evaluation | ViT + Spectral (ensemble) | Validate realism of generated images |
+
+**Why dual ControlNet (depth + Canny edges)?** Depth alone loses fine object boundaries; Canny edges alone lose spatial structure. Combining both preserves geometry and boundaries so synthesized backgrounds align naturally with foreground objects — and YOLO annotations remain valid without re-labeling.
+
+### Synthetic Quality Evaluation
+
+| Detector | Method | AUC | Accuracy |
+|---|---|:---:|:---:|
+| Spectral (S-DiFL) | Frequency analysis | 0.491 | 0.514 |
+| ViT-based | `umm-maybe/AI-image-detector` | 0.658 | 0.623 |
+| Ensemble | Average of above | 0.658 | 0.623 |
+
+AUC ~0.66 indicates images are realistic enough to partially fool automated detectors — sufficient quality for training.
 
 ---
 
