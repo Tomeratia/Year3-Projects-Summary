@@ -544,12 +544,29 @@ Both projects share a deeper common thread:
 
 ### Semester A
 
-- Geiger et al. (2013). **Vision meets robotics: The KITTI dataset.** *IJRR.*
-- Podell et al. (2023). **SDXL: Improving latent diffusion models.** *arXiv:2307.01952.*
-- Zhang et al. (2023). **Adding conditional control to text-to-image diffusion models (ControlNet).** *ICCV 2023.*
-- Carion et al. (2025). **SAM 3: Segment Anything with Concepts.** *arXiv:2511.16719.*
-- Yang et al. (2024). **Depth Anything V2.** *arXiv:2406.09414.*
-- Ultralytics. (2024). **YOLOv11.**
+**Dataset**
+- Geiger, A., Lenz, P., Stiller, C., & Urtasun, R. (2013). Vision meets robotics: The KITTI dataset. *International Journal of Robotics Research, 32*(11), 1231–1237.
+
+**Generative Models**
+- Podell, D. et al. (2023). SDXL: Improving latent diffusion models for high-resolution image synthesis. *arXiv:2307.01952.* — used as `diffusers/stable-diffusion-xl-1.0-inpainting-0.1`
+- Zhang, L., Rao, A., & Agrawala, M. (2023). Adding conditional control to text-to-image diffusion models (ControlNet). *ICCV 2023.* — used as `diffusers/controlnet-depth-sdxl-1.0`
+- Rombach, R. et al. (2022). High-resolution image synthesis with latent diffusion models. *CVPR 2022.*
+
+**Segmentation & Depth Estimation**
+- Carion, N. et al. (2025). SAM 3: Segment Anything with Concepts. *arXiv:2511.16719.* — used as `facebook/sam3`
+- Yang, L. et al. (2024). Depth Anything V2. *arXiv:2406.09414.* — used as `depth-anything/Depth-Anything-V2-Small-hf`
+
+**Object Detection**
+- Ultralytics. (2024). YOLOv11 (YOLO11s). github.com/ultralytics/ultralytics — used for M1, M2, M3 training and evaluation
+
+**Synthetic Detection**
+- Dosovitskiy, A. et al. (2020). An image is worth 16×16 words: Transformers for image recognition at scale (ViT). *arXiv:2010.11929.* — used as `umm-maybe/AI-image-detector`
+
+**Long-Tail & Synthetic Data Augmentation**
+- Zhang, Y. et al. (2021). Deep long-tailed learning: A survey. *arXiv:2110.04596.*
+- Tremblay, J. et al. (2018). Training deep networks with synthetic data: Bridging the reality gap by domain randomization. *CVPR Workshops 2018.*
+
+*Project for the Generative AI course, Year 3, Semester A.*
 
 ### Semester B
 
